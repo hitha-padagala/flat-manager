@@ -82,7 +82,7 @@ export default function ExpensesPage() {
         <h1 className="text-3xl font-bold">Expenses</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Expense'}
         </button>
@@ -110,7 +110,7 @@ export default function ExpensesPage() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   placeholder="e.g., Cleaning, Repairs"
                   required
                 />
@@ -121,7 +121,7 @@ export default function ExpensesPage() {
                   type="number"
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   placeholder="0.00"
                   min="0"
                   step="0.01"
@@ -134,7 +134,7 @@ export default function ExpensesPage() {
                   type="text"
                   value={formData.month}
                   onChange={(e) => setFormData({ ...formData, month: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   placeholder="e.g., April 2026"
                   required
                 />
@@ -142,7 +142,7 @@ export default function ExpensesPage() {
             </div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
             >
               {editingExpense ? 'Update' : 'Add'}
             </button>
@@ -185,7 +185,7 @@ export default function ExpensesPage() {
                   <td className="py-3 px-4 text-right space-x-2">
                     <button
                       onClick={() => handleEdit(expense)}
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-orange-600 hover:text-orange-800"
                     >
                       Edit
                     </button>

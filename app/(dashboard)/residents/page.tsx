@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getUsers, createUser, updateUser, deleteUser, getMaintenanceRecords } from '@/lib/actions';
-import { Role } from '../../generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 
 interface User {
   id: string;
@@ -81,7 +81,7 @@ export default function ResidentsPage() {
         <h1 className="text-3xl font-bold">Residents</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Resident'}
         </button>
@@ -100,7 +100,7 @@ export default function ResidentsPage() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   required
                 />
               </div>
@@ -110,7 +110,7 @@ export default function ResidentsPage() {
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   required
                 />
               </div>
@@ -120,7 +120,7 @@ export default function ResidentsPage() {
                   type="text"
                   value={formData.flatNumber}
                   onChange={(e) => setFormData({ ...formData, flatNumber: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   required
                 />
               </div>
@@ -129,7 +129,7 @@ export default function ResidentsPage() {
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                 >
                   <option value="OWNER">Owner</option>
                   <option value="TENANT">Tenant</option>
@@ -138,7 +138,7 @@ export default function ResidentsPage() {
             </div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
             >
               {editingUser ? 'Update' : 'Add'}
             </button>
@@ -192,7 +192,7 @@ export default function ResidentsPage() {
                   <td className="py-3 px-4 text-right space-x-2">
                     <button
                       onClick={() => handleEdit(user)}
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-orange-600 hover:text-orange-800"
                     >
                       Edit
                     </button>

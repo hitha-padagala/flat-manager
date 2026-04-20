@@ -73,7 +73,7 @@ export default function PaymentsPage() {
         <h1 className="text-3xl font-bold">Payments</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Payment'}
         </button>
@@ -90,7 +90,7 @@ export default function PaymentsPage() {
                   type="text"
                   value={formData.flatNumber}
                   onChange={(e) => setFormData({ ...formData, flatNumber: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   required
                 />
               </div>
@@ -99,7 +99,7 @@ export default function PaymentsPage() {
                 <select
                   value={formData.month}
                   onChange={(e) => setFormData({ ...formData, month: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   required
                 >
                   <option value="">Select Month</option>
@@ -114,7 +114,7 @@ export default function PaymentsPage() {
                   type="number"
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                   min="0"
                   step="0.01"
                   required
@@ -125,7 +125,7 @@ export default function PaymentsPage() {
                 <select
                   value={formData.paymentMode}
                   onChange={(e) => setFormData({ ...formData, paymentMode: e.target.value as 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
                 >
                   <option value="UPI">UPI</option>
                   <option value="CASH">Cash</option>
@@ -135,7 +135,7 @@ export default function PaymentsPage() {
             </div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
             >
               Add
             </button>
