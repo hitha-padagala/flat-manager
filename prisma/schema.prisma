@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  phone       String
+  flatNumber  String
+  role        Role
+}
+
+model Maintenance {
+  id           String       @id @default(uuid())
+  flatNumber   String
+  month        String
+  isPaid       Boolean
+  amount       Float
+  paymentMode  PaymentMode?
+}
+
+enum PaymentMode {
+  UPI
+  CASH
+  SOCIETY_ACCOUNT
+}
+
+model Expense {
+  id      String   @id @default(uuid())
+  title   String
+  amount  Float
+  month   String   @default("")
+  date    DateTime @default(now())
+}
+
+enum Role {
+  OWNER
+  TENANT
+}
