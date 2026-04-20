@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { getUsers, createUser, updateUser, deleteUser, getMaintenanceRecords } from '@/lib/actions';
-import { Role } from '@/generated/prisma/enums';
+
+type Role = 'OWNER' | 'TENANT';
 
 interface User {
   id: string;

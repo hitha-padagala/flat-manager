@@ -4,7 +4,8 @@ import { prisma } from './prisma';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Role, PaymentMode } from '../generated/prisma/enums';
+type Role = 'OWNER' | 'TENANT';
+type PaymentMode = 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT';
 
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'admin123';
