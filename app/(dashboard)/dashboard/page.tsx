@@ -1,5 +1,11 @@
 import { getDashboardStats } from '@/lib/actions';
 
+interface UnpaidFlat {
+  flatNumber: string;
+  month: string;
+  amount: number;
+}
+
 export default async function DashboardPage() {
   const stats = await getDashboardStats();
 
@@ -44,7 +50,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {stats.unpaidFlats.map((flat, index) => (
+                {(stats.unpaidFlats as UnpaidFlat[]).map((flat, index) => (
                   <tr key={index} className="border-b hover:bg-gray-50">
                     <td className="py-3 px-4">{flat.flatNumber}</td>
                     <td className="py-3 px-4">{flat.month}</td>
