@@ -79,7 +79,7 @@ export default function ResidentsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Residents</h1>
+        <h1 className="text-3xl font-bold dark:text-white">Residents</h1>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
@@ -89,48 +89,48 @@ export default function ResidentsPage() {
       </div>
 
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4 dark:text-white">
             {editingUser ? 'Edit Resident' : 'Add New Resident'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Phone</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Flat Number</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Flat Number</label>
                 <input
                   type="text"
                   value={formData.flatNumber}
                   onChange={(e) => setFormData({ ...formData, flatNumber: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Role</label>
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                 >
                   <option value="OWNER">Owner</option>
                   <option value="TENANT">Tenant</option>
@@ -147,21 +147,21 @@ export default function ResidentsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-stone-800 rounded-lg shadow overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-500">Loading...</div>
+          <div className="p-8 text-center text-gray-500 dark:text-stone-400">Loading...</div>
         ) : users.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No residents found</div>
+          <div className="p-8 text-center text-gray-500 dark:text-stone-400">No residents found</div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-stone-700">
               <tr>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Flat Number</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Name</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Phone</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Role</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Maintenance</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-600">Actions</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Flat Number</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Name</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Phone</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Role</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Maintenance</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -170,36 +170,36 @@ export default function ResidentsPage() {
                 const hasUnpaid = maintenanceRecords.some(m => !m.isPaid);
                 const allPaid = maintenanceRecords.length > 0 && maintenanceRecords.every(m => m.isPaid);
                 return (
-                <tr key={user.id} className="border-t hover:bg-gray-50">
-                  <td className="py-3 px-4">{user.flatNumber}</td>
-                  <td className="py-3 px-4">{user.name}</td>
-                  <td className="py-3 px-4">{user.phone}</td>
+                <tr key={user.id} className="border-t dark:border-stone-700 hover:bg-gray-50 dark:hover:bg-stone-700">
+                  <td className="py-3 px-4 dark:text-stone-200">{user.flatNumber}</td>
+                  <td className="py-3 px-4 dark:text-stone-200">{user.name}</td>
+                  <td className="py-3 px-4 dark:text-stone-200">{user.phone}</td>
                   <td className="py-3 px-4">
-                    <span className={`px-2 py-1 rounded text-sm ${user.role === 'OWNER' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                    <span className={`px-2 py-1 rounded text-sm ${user.role === 'OWNER' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'}`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="py-3 px-4">
                     {maintenanceRecords.length === 0 ? (
-                      <span className="text-gray-400 text-sm">No records</span>
+                      <span className="text-gray-400 text-sm dark:text-stone-500">No records</span>
                     ) : allPaid ? (
-                      <span className="px-2 py-1 rounded text-sm bg-green-100 text-green-800">Paid</span>
+                      <span className="px-2 py-1 rounded text-sm bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Paid</span>
                     ) : hasUnpaid ? (
-                      <span className="px-2 py-1 rounded text-sm bg-red-100 text-red-800">Unpaid</span>
+                      <span className="px-2 py-1 rounded text-sm bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">Unpaid</span>
                     ) : (
-                      <span className="px-2 py-1 rounded text-sm bg-green-100 text-green-800">Paid</span>
+                      <span className="px-2 py-1 rounded text-sm bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Paid</span>
                     )}
                   </td>
                   <td className="py-3 px-4 text-right space-x-2">
                     <button
                       onClick={() => handleEdit(user)}
-                      className="text-orange-600 hover:text-orange-800"
+                      className="text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(user.id)}
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                     >
                       Delete
                     </button>
