@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getMaintenanceRecords, createMaintenance, toggleMaintenancePayment, updateMaintenancePaymentMode, deleteMaintenance } from '@/lib/actions';
+import { getMaintenanceRecords, createMaintenance, toggleMaintenancePayment, updateMaintenancePaymentMode, deleteMaintenance, getCurrentUser } from '@/lib/actions';
 
 interface MaintenanceRecord {
   id: string;
@@ -10,6 +10,7 @@ interface MaintenanceRecord {
   isPaid: boolean;
   amount: number;
   paymentMode: 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT' | null;
+  paidDate: Date | null;
 }
 
 const months = [
@@ -20,11 +21,13 @@ const months = [
 export default function PaymentsPage() {
   const [records, setRecords] = useState<MaintenanceRecord[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState<{ flatNumber: string; month: string; amount: number; paymentMode: 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT' }>({ flatNumber: '', month: '', amount: 0, paymentMode: 'UPI' });
+  const [formData, setFormData] = useState<{ flatNumber: string; month: string; amount: number; paymentMode: 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT'; isPaid: boolean; paidDate: string }>({ flatNumber: '', month: '', amount: 0, paymentMode: 'UPI', isPaid: false, paidDate: '' });
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     loadRecords();
+    checkAdmin();
   }, []);
 
   const loadRecords = async () => {
@@ -34,10 +37,22 @@ export default function PaymentsPage() {
     setLoading(false);
   };
 
+  const checkAdmin = async () => {
+    const user = await getCurrentUser();
+    setIsAdmin(user?.role === 'ADMIN');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createMaintenance(formData);
-    setFormData({ flatNumber: '', month: '', amount: 0, paymentMode: 'UPI' });
+    await createMaintenance({
+      flatNumber: formData.flatNumber,
+      month: formData.month,
+      amount: formData.amount,
+      paymentMode: formData.paymentMode,
+      isPaid: formData.isPaid,
+      paidDate: formData.isPaid && formData.paidDate ? new Date(formData.paidDate) : null,
+    });
+    setFormData({ flatNumber: '', month: '', amount: 0, paymentMode: 'UPI', isPaid: false, paidDate: '' });
     setShowForm(false);
     loadRecords();
   };
@@ -71,15 +86,17 @@ export default function PaymentsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold dark:text-white">Payments</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
-        >
-          {showForm ? 'Cancel' : 'Add Payment'}
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+          >
+            {showForm ? 'Cancel' : 'Add Payment'}
+          </button>
+        )}
       </div>
 
-      {showForm && (
+      {showForm && isAdmin && (
         <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4 dark:text-white">Add Maintenance Entry</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,8 +129,8 @@ export default function PaymentsPage() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Amount (₹)</label>
                 <input
                   type="number"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+                  value={formData.amount || ''}
+                  onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   min="0"
                   step="0.01"
@@ -132,6 +149,29 @@ export default function PaymentsPage() {
                   <option value="SOCIETY_ACCOUNT">Society Account</option>
                 </select>
               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isPaid"
+                  checked={formData.isPaid}
+                  onChange={(e) => setFormData({ ...formData, isPaid: e.target.checked })}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500"
+                />
+                <label htmlFor="isPaid" className="text-sm font-medium text-gray-700 dark:text-stone-300">Paid</label>
+              </div>
+              {formData.isPaid && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Paid Date</label>
+                  <input
+                    type="date"
+                    value={formData.paidDate}
+                    onChange={(e) => setFormData({ ...formData, paidDate: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
+                  />
+                </div>
+              )}
             </div>
             <button
               type="submit"
@@ -158,7 +198,8 @@ export default function PaymentsPage() {
                   <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Amount</th>
                   <th className="text-center py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Status</th>
                   <th className="text-center py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Payment Mode</th>
-                  <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Actions</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Paid Date</th>
+                  {isAdmin && <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -168,37 +209,52 @@ export default function PaymentsPage() {
                     <td className="py-3 px-4 dark:text-stone-200">{record.month}</td>
                     <td className="py-3 px-4 text-right dark:text-stone-200">₹{record.amount.toLocaleString()}</td>
                     <td className="py-3 px-4 text-center">
-                      <button
-                        onClick={() => handleToggle(record.id)}
-                        className={`px-3 py-1 rounded text-sm cursor-pointer transition-colors ${
-                          record.isPaid
-                            ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800'
-                            : 'bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800'
-                        }`}
-                      >
-                        {record.isPaid ? 'Paid' : 'Unpaid'}
-                      </button>
+                      {isAdmin ? (
+                        <button
+                          onClick={() => handleToggle(record.id)}
+                          className={`px-3 py-1 rounded text-sm cursor-pointer transition-colors ${
+                            record.isPaid
+                              ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800'
+                              : 'bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800'
+                          }`}
+                        >
+                          {record.isPaid ? 'Paid' : 'Unpaid'}
+                        </button>
+                      ) : (
+                        <span className={`px-3 py-1 rounded text-sm ${record.isPaid ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'}`}>
+                          {record.isPaid ? 'Paid' : 'Unpaid'}
+                        </span>
+                      )}
                     </td>
                     <td className="py-3 px-4 text-center">
-                      <select
-                        value={record.paymentMode || 'UPI'}
-                        onChange={(e) => handlePaymentModeChange(record.id, e.target.value as 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT')}
-                        className="px-2 py-1 text-sm border border-gray-300 dark:border-stone-600 rounded cursor-pointer bg-white dark:bg-stone-700 dark:text-stone-200"
-                        disabled={!record.isPaid}
-                      >
-                        <option value="UPI">UPI</option>
-                        <option value="CASH">Cash</option>
-                        <option value="SOCIETY_ACCOUNT">Society Account</option>
-                      </select>
+                      {isAdmin ? (
+                        <select
+                          value={record.paymentMode || 'UPI'}
+                          onChange={(e) => handlePaymentModeChange(record.id, e.target.value as 'UPI' | 'CASH' | 'SOCIETY_ACCOUNT')}
+                          className="px-2 py-1 text-sm border border-gray-300 dark:border-stone-600 rounded cursor-pointer bg-white dark:bg-stone-700 dark:text-stone-200"
+                          disabled={!record.isPaid}
+                        >
+                          <option value="UPI">UPI</option>
+                          <option value="CASH">Cash</option>
+                          <option value="SOCIETY_ACCOUNT">Society Account</option>
+                        </select>
+                      ) : (
+                        <span className="text-sm dark:text-stone-200">{record.paymentMode || 'UPI'}</span>
+                      )}
                     </td>
-                    <td className="py-3 px-4 text-right">
-                      <button
-                        onClick={() => handleDelete(record.id)}
-                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                      >
-                        Delete
-                      </button>
+                    <td className="py-3 px-4 dark:text-stone-200">
+                      {record.paidDate ? new Date(record.paidDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                     </td>
+                    {isAdmin && (
+                      <td className="py-3 px-4 text-right">
+                        <button
+                          onClick={() => handleDelete(record.id)}
+                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
