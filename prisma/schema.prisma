@@ -12,11 +12,18 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  name        String
-  phone       String
-  flatNumber  String
-  role        Role
+  id            String      @id @default(uuid())
+  name          String
+  phone         String      @unique
+  flatNumber    String
+  residentType  Role        @default(OWNER)
+  role          UserRole    @default(USER)
+  password      String?
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }
 
 model Maintenance {
@@ -26,6 +33,7 @@ model Maintenance {
   isPaid       Boolean
   amount       Float
   paymentMode  PaymentMode?
+  paidDate     DateTime?
 }
 
 enum PaymentMode {
@@ -39,6 +47,7 @@ model Expense {
   title   String
   amount  Float
   month   String   @default("")
+  note    String   @default("")
   date    DateTime @default(now())
 }
 

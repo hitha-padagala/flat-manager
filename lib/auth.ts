@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = 'FlatMgr@2026';
 const AUTH_COOKIE_NAME = 'flat_manager_auth';
 
 export async function login(username: string, password: string): Promise<boolean> {
