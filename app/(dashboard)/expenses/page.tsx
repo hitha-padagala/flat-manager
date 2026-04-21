@@ -79,7 +79,7 @@ export default function ExpensesPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Expenses</h1>
+        <h1 className="text-3xl font-bold dark:text-white">Expenses</h1>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
@@ -88,40 +88,40 @@ export default function ExpensesPage() {
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-gray-500 text-sm font-medium">Total Expenses</h3>
-            <p className="text-3xl font-bold mt-1">₹{totalExpenses.toLocaleString()}</p>
+            <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Total Expenses</h3>
+            <p className="text-3xl font-bold mt-1 dark:text-white">₹{totalExpenses.toLocaleString()}</p>
           </div>
         </div>
       </div>
 
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4 dark:text-white">
             {editingExpense ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Title</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   placeholder="e.g., Cleaning, Repairs"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Amount (₹)</label>
                 <input
                   type="number"
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   placeholder="0.00"
                   min="0"
                   step="0.01"
@@ -129,12 +129,12 @@ export default function ExpensesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Month</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-1">Month</label>
                 <input
                   type="text"
                   value={formData.month}
                   onChange={(e) => setFormData({ ...formData, month: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white dark:bg-stone-700 dark:text-white"
                   placeholder="e.g., April 2026"
                   required
                 />
@@ -159,39 +159,39 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-stone-800 rounded-lg shadow overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-500">Loading...</div>
+          <div className="p-8 text-center text-gray-500 dark:text-stone-400">Loading...</div>
         ) : expenses.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No expenses found</div>
+          <div className="p-8 text-center text-gray-500 dark:text-stone-400">No expenses found</div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-stone-700">
               <tr>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Date</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Month</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Title</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-600">Amount</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-600">Actions</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Date</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Month</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Title</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Amount</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-stone-300">Actions</th>
               </tr>
             </thead>
             <tbody>
               {expenses.map((expense) => (
-                <tr key={expense.id} className="border-t hover:bg-gray-50">
-                  <td className="py-3 px-4">{formatDate(expense.date)}</td>
-                  <td className="py-3 px-4">{expense.month}</td>
-                  <td className="py-3 px-4">{expense.title}</td>
-                  <td className="py-3 px-4 text-right">₹{expense.amount.toLocaleString()}</td>
+                <tr key={expense.id} className="border-t dark:border-stone-700 hover:bg-gray-50 dark:hover:bg-stone-700">
+                  <td className="py-3 px-4 dark:text-stone-200">{formatDate(expense.date)}</td>
+                  <td className="py-3 px-4 dark:text-stone-200">{expense.month}</td>
+                  <td className="py-3 px-4 dark:text-stone-200">{expense.title}</td>
+                  <td className="py-3 px-4 text-right dark:text-stone-200">₹{expense.amount.toLocaleString()}</td>
                   <td className="py-3 px-4 text-right space-x-2">
                     <button
                       onClick={() => handleEdit(expense)}
-                      className="text-orange-600 hover:text-orange-800"
+                      className="text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(expense.id)}
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                     >
                       Delete
                     </button>
