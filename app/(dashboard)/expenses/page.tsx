@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { getExpenses, createExpense, updateExpense, deleteExpense, getCurrentUser } from '@/lib/actions';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface Expense {
   id: string;
@@ -20,6 +22,7 @@ const months = [
 const expenseTypes = [
   { value: 'Watchman Salary', label: 'Watchman Salary' },
   { value: 'Water Bill', label: 'Water Bill' },
+  { value: 'Electricity Bill', label: 'Electricity Bill' },
   { value: 'Miscellaneous', label: 'Miscellaneous' },
   { value: 'Others', label: 'Others' }
 ];
@@ -91,6 +94,37 @@ export default function ExpensesPage() {
     setEditingExpense(null);
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.text('Expenses Report', 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')}`, 14, 30);
+
+    const tableData = expenses.map(e => [
+      formatDate(e.date),
+      e.month,
+      e.title,
+      e.note || '-',
+      `₹${e.amount.toLocaleString()}`
+    ]);
+
+    autoTable(doc, {
+      head: [['Date', 'Month', 'Type', 'Note', 'Amount']],
+      body: tableData,
+      startY: 35,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [234, 88, 12] }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY || 40;
+    doc.setFontSize(12);
+    doc.text(`Total Expenses: ₹${totalExpenses.toLocaleString()}`, 14, finalY + 10);
+
+    doc.save('expenses.pdf');
+  };
+
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const formatDate = (date: Date | string) => {
@@ -102,14 +136,22 @@ export default function ExpensesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold dark:text-white">Expenses</h1>
-        {isAdmin && (
+        <div className="flex gap-2">
           <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+            onClick={downloadPDF}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
-            {showForm ? 'Cancel' : 'Add Expense'}
+            Download PDF
           </button>
-        )}
+          {isAdmin && (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              {showForm ? 'Cancel' : 'Add Expense'}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">

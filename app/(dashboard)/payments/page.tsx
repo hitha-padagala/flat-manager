@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { getMaintenanceRecords, createMaintenance, toggleMaintenancePayment, updateMaintenancePaymentMode, deleteMaintenance, getCurrentUser } from '@/lib/actions';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface MaintenanceRecord {
   id: string;
@@ -74,6 +76,44 @@ export default function PaymentsPage() {
     }
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.text('Maintenance Payments Report', 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')}`, 14, 30);
+
+    const tableData = records.map(r => [
+      r.flatNumber,
+      r.month,
+      `₹${r.amount.toLocaleString()}`,
+      r.isPaid ? 'Paid' : 'Unpaid',
+      r.paymentMode || 'UPI',
+      r.paidDate ? new Date(r.paidDate).toLocaleDateString('en-IN') : '-'
+    ]);
+
+    autoTable(doc, {
+      head: [['Flat Number', 'Month', 'Amount', 'Status', 'Payment Mode', 'Paid Date']],
+      body: tableData,
+      startY: 35,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [234, 88, 12] }
+    });
+
+    const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
+    const paidAmount = records.filter(r => r.isPaid).reduce((sum, r) => sum + r.amount, 0);
+    const unpaidAmount = records.filter(r => !r.isPaid).reduce((sum, r) => sum + r.amount, 0);
+
+    const finalY = (doc as any).lastAutoTable.finalY || 40;
+    doc.setFontSize(10);
+    doc.text(`Total: ₹${totalAmount.toLocaleString()}`, 14, finalY + 10);
+    doc.text(`Paid: ₹${paidAmount.toLocaleString()}`, 80, finalY + 10);
+    doc.text(`Unpaid: ₹${unpaidAmount.toLocaleString()}`, 140, finalY + 10);
+
+    doc.save('maintenance-payments.pdf');
+  };
+
   const groupedRecords = records.reduce((acc, record) => {
     if (!acc[record.flatNumber]) {
       acc[record.flatNumber] = [];
@@ -86,14 +126,22 @@ export default function PaymentsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold dark:text-white">Payments</h1>
-        {isAdmin && (
+        <div className="flex gap-2">
           <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+            onClick={downloadPDF}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
-            {showForm ? 'Cancel' : 'Add Payment'}
+            Download PDF
           </button>
-        )}
+          {isAdmin && (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              {showForm ? 'Cancel' : 'Add Payment'}
+            </button>
+          )}
+        </div>
       </div>
 
       {showForm && isAdmin && (

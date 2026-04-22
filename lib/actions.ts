@@ -338,7 +338,8 @@ export async function getDashboardStats(selectedMonth?: string) {
     const expenseWhereClause = selectedMonth ? { month: selectedMonth } : {};
     const maintenanceWhereClause = selectedMonth ? { month: selectedMonth, isPaid: true } : { isPaid: true };
     
-    const [totalResidents, paidCount, unpaidCount, totalExpenses, unpaidFlats, expenseBreakdown, maintenanceIncome] = await Promise.all([
+    const [totalFlatsResult, totalResidents, paidCount, unpaidCount, totalExpenses, unpaidFlats, expenseBreakdown, maintenanceIncome, expectedMaintenance, pendingMaintenance] = await Promise.all([
+      prisma.user.findMany({ where: { flatNumber: { not: '' } }, select: { flatNumber: true }, distinct: ['flatNumber'] }),
       prisma.user.count(),
       prisma.maintenance.count({ where: { isPaid: true } }),
       prisma.maintenance.count({ where: { isPaid: false } }),
@@ -353,7 +354,10 @@ export async function getDashboardStats(selectedMonth?: string) {
         select: { title: true, amount: true },
       }),
       prisma.maintenance.aggregate({ where: maintenanceWhereClause, _sum: { amount: true } }),
+      prisma.maintenance.aggregate({ where: selectedMonth ? { month: selectedMonth } : {}, _sum: { amount: true } }),
+      prisma.maintenance.aggregate({ where: { isPaid: false }, _sum: { amount: true } }),
     ]);
+    const totalFlats = totalFlatsResult.length;
 
     // Group expenses by title (category)
     const categoryTotals = expenseBreakdown.reduce((acc, exp) => {
@@ -373,6 +377,7 @@ export async function getDashboardStats(selectedMonth?: string) {
     ];
 
     return {
+      totalFlats,
       totalResidents,
       paidCount,
       unpaidCount,
@@ -381,10 +386,13 @@ export async function getDashboardStats(selectedMonth?: string) {
       unpaidFlats,
       expensePieChartData,
       incomeExpenseData,
+      expectedMaintenance: expectedMaintenance._sum.amount ?? 0,
+      pendingMaintenance: pendingMaintenance._sum.amount ?? 0,
     };
   } catch (error) {
     console.error('Error fetching dashboard stats:', error);
     return {
+      totalFlats: 0,
       totalResidents: 0,
       paidCount: 0,
       unpaidCount: 0,
@@ -393,6 +401,8 @@ export async function getDashboardStats(selectedMonth?: string) {
       unpaidFlats: [],
       expensePieChartData: [],
       incomeExpenseData: [],
+      expectedMaintenance: 0,
+      pendingMaintenance: 0,
     };
   }
 }

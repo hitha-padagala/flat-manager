@@ -18,6 +18,7 @@ interface PieDataItem {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
+    totalFlats: 0,
     totalResidents: 0,
     paidCount: 0,
     unpaidCount: 0,
@@ -26,6 +27,8 @@ export default function DashboardPage() {
     unpaidFlats: [],
     expensePieChartData: [] as PieDataItem[],
     incomeExpenseData: [] as PieDataItem[],
+    expectedMaintenance: 0,
+    pendingMaintenance: 0,
   });
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -45,7 +48,12 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <h1 className="text-3xl font-bold dark:text-white">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
+          <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Total Flats</h3>
+          <p className="text-3xl font-bold mt-2 dark:text-white">{stats.totalFlats}</p>
+        </div>
+
         <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
           <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Total Residents</h3>
           <p className="text-3xl font-bold mt-2 dark:text-white">{stats.totalResidents}</p>
@@ -77,6 +85,16 @@ export default function DashboardPage() {
           <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Unpaid Maintenance</h3>
           <p className="text-3xl font-bold mt-2 text-red-600 dark:text-red-400">{stats.unpaidCount}</p>
         </div>
+
+        <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
+          <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Expected Maintenance</h3>
+          <p className="text-3xl font-bold mt-2 text-blue-600 dark:text-blue-400">₹{stats.expectedMaintenance.toLocaleString()}</p>
+        </div>
+
+        <div className="bg-white dark:bg-stone-800 p-6 rounded-lg shadow">
+          <h3 className="text-gray-500 dark:text-stone-400 text-sm font-medium">Pending Maintenance</h3>
+          <p className="text-3xl font-bold mt-2 text-orange-600 dark:text-orange-400">₹{stats.pendingMaintenance.toLocaleString()}</p>
+        </div>
       </div>
 
       {/* Month Selector */}
@@ -103,9 +121,11 @@ export default function DashboardPage() {
             Income vs Expenses Overview {selectedMonth && `- ${selectedMonth}`}
           </h2>
           {loading ? (
-            <div className="p-8 text-center text-gray-500 dark:text-stone-400">Loading...</div>
+            <div className="p-8 text-center text-gray-500 dark:text-stone-400 min-h-[300px] flex items-center justify-center">
+              Loading...
+            </div>
           ) : (
-            <div className="h-96 flex items-center justify-center">
+            <div className="h-96 min-h-[300px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -140,9 +160,11 @@ export default function DashboardPage() {
             Expense Breakdown by Category {selectedMonth && `- ${selectedMonth}`}
           </h2>
           {loading ? (
-            <div className="p-8 text-center text-gray-500 dark:text-stone-400">Loading...</div>
+            <div className="p-8 text-center text-gray-500 dark:text-stone-400 min-h-[300px] flex items-center justify-center">
+              Loading...
+            </div>
           ) : (
-            <div className="h-96">
+            <div className="h-96 min-h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
