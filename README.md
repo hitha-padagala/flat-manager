@@ -122,6 +122,9 @@ flat-manager/
 - `UserRole` - `ADMIN`, `USER`
 - `PaymentMode` - `UPI`, `CASH`, `SOCIETY_ACCOUNT`
 
+
+## TODO
+
 ## Dashboard Charts
 
 The dashboard features three key metrics cards and two interactive pie charts (filterable by month):
