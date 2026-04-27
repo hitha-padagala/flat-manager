@@ -19,6 +19,7 @@ model User {
   residentType  Role        @default(OWNER)
   role          UserRole    @default(USER)
   password      String?
+  isManager     Boolean     @default(false)
 }
 
 enum UserRole {

@@ -119,7 +119,7 @@ export async function getUsers() {
   }
 }
 
-export async function createUser(data: { name: string; phone: string; flatNumber: string; residentType: Role; password: string }) {
+export async function createUser(data: { name: string; phone: string; flatNumber: string; residentType: Role; password: string; isManager?: boolean }) {
   await requireAdmin();
   try {
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -131,10 +131,12 @@ export async function createUser(data: { name: string; phone: string; flatNumber
         residentType: data.residentType,
         role: UserRole.USER,
         password: hashedPassword,
+        isManager: data.isManager ?? false,
       },
     });
     revalidatePath('/residents');
     revalidatePath('/owners');
+    revalidatePath('/members');
     revalidatePath('/dashboard');
     return { success: true, user };
   } catch (error) {
@@ -143,7 +145,7 @@ export async function createUser(data: { name: string; phone: string; flatNumber
   }
 }
 
-export async function updateUser(id: string, data: { name?: string; phone?: string; flatNumber?: string; residentType?: Role; password?: string }) {
+export async function updateUser(id: string, data: { name?: string; phone?: string; flatNumber?: string; residentType?: Role; password?: string; isManager?: boolean }) {
   await requireAdmin();
   try {
     const updateData: any = {};
@@ -151,6 +153,7 @@ export async function updateUser(id: string, data: { name?: string; phone?: stri
     if (data.phone !== undefined) updateData.phone = data.phone;
     if (data.flatNumber !== undefined) updateData.flatNumber = data.flatNumber;
     if (data.residentType !== undefined) updateData.residentType = data.residentType;
+    if (data.isManager !== undefined) updateData.isManager = data.isManager;
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10);
     }
@@ -160,6 +163,7 @@ export async function updateUser(id: string, data: { name?: string; phone?: stri
     });
     revalidatePath('/residents');
     revalidatePath('/owners');
+    revalidatePath('/members');
     revalidatePath('/dashboard');
     return { success: true, user };
   } catch (error) {
