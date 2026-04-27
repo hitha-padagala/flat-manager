@@ -10,6 +10,7 @@ const navItems = [
   { href: '/owners', label: 'Owners' },
   { href: '/payments', label: 'Payments' },
   { href: '/expenses', label: 'Expenses' },
+  { href: '/rules', label: 'Rules' },
 ];
 
 export default function Sidebar() {
