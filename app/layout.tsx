@@ -4,9 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Flat Manager",
   description: "Manage your flat society",
-  icons:{
-    icon: "/favicon.png",
-  }
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
